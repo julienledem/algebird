@@ -39,7 +39,7 @@ object PlusOptimizedSummingCache {
   def apply[K,V:Semigroup](cap: Int): SummingCache[K,V] = new PlusOptimizedSummingCache[K,V](cap)
 }
 
-trait SummingCache[K,V] extends StatefulSummer[Map[K,V]]
+class SummingCache[K,V] extends StatefulSummer[Map[K,V]]
 
 /** A Stateful Summer on Map[K,V] that keeps a cache of recent keys
  *  @author Oscar Boykin
@@ -119,7 +119,7 @@ class SumOptionOptimizedSummingCache[K,V] private[algebird] (capacity: Int)(impl
 
   private def sum(items: Seq[V]): Option[V] = {
     if (items.size == 1) {
-      Some(items.first)
+      Some(items.head)
     } else {
       sgv.sumOption(items)
     }
