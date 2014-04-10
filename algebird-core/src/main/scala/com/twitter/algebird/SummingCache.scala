@@ -28,24 +28,18 @@ import scala.collection.JavaConverters._
 import scala.annotation.tailrec
 
 object SummingCache {
-  def apply[K,V:Semigroup](cap: Int): SummingCache[K,V] = new SumOptionOptimizedSummingCache[K,V](cap)
-}
-
-object SumOptionOptimizedSummingCache {
-  def apply[K,V:Semigroup](cap: Int): SummingCache[K,V] = new SumOptionOptimizedSummingCache[K,V](cap)
+  def apply[K,V:Semigroup](cap: Int): SummingCache[K,V] = new SummingCache[K,V](cap)
 }
 
 object PlusOptimizedSummingCache {
-  def apply[K,V:Semigroup](cap: Int): SummingCache[K,V] = new PlusOptimizedSummingCache[K,V](cap)
+  def apply[K,V:Semigroup](cap: Int): PlusOptimizedSummingCache[K,V] = new PlusOptimizedSummingCache[K,V](cap)
 }
-
-abstract class SummingCache[K,V] extends StatefulSummer[Map[K,V]]
 
 /** A Stateful Summer on Map[K,V] that keeps a cache of recent keys
  *  @author Oscar Boykin
  */
 class PlusOptimizedSummingCache[K,V] private (capacity: Int)(implicit sgv: Semigroup[V])
-  extends SummingCache[K,V] {
+  extends StatefulSummer[Map[K,V]] {
 
   require(capacity >= 0, "Cannot have negative capacity in SummingIterator")
 
@@ -91,8 +85,8 @@ class PlusOptimizedSummingCache[K,V] private (capacity: Int)(implicit sgv: Semig
 /** A Stateful Summer on Map[K,V] that keeps a cache of recent keys
  *  @author Julien Le Dem
  */
-class SumOptionOptimizedSummingCache[K,V] private[algebird] (capacity: Int)(implicit sgv: Semigroup[V])
-  extends SummingCache[K,V] {
+class SummingCache[K,V] private[algebird] (capacity: Int)(implicit sgv: Semigroup[V])
+  extends StatefulSummer[Map[K,V]] {
 
   require(capacity >= 0, "Cannot have negative capacity in SummingIterator")
 
